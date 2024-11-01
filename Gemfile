@@ -38,6 +38,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Capybara for system tests
+  gem "capybara"
+
+  # Selenium WebDriver for browser automation
+  gem "selenium-webdriver", "~> 4.0" # Adjust version as necessary
+
+  # Webdrivers gem to manage drivers automatically
+  gem "webdrivers" # This gem helps to automatically install the correct drivers for your browser
 end
-
-
