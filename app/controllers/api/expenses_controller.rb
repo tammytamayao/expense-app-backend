@@ -1,5 +1,5 @@
 class Api::ExpensesController < ApplicationController
-    before_action :set_expense, only: [ :update, :destroy ]
+    before_action :set_expense, only: [ :show, :update, :destroy ]
 
     # GET /api/expenses
     def index
@@ -15,6 +15,12 @@ class Api::ExpensesController < ApplicationController
         render json: @expense.errors, status: :unprocessable_entity
       end
     end
+
+    # GET /api/expenses/:id
+    def show
+      render json: @expense
+    end
+
     # PATCH/PUT /api/expenses/:id
     def update
       if @expense.update(expense_params)
