@@ -42,6 +42,6 @@ class Api::ExpensesController < ApplicationController
     end
 
     def expense_params
-      params.require(:expense).permit(:title, :description, :amount)
+      params.require(:expense).permit(:title, :description, :amount, :date)
     end
 end
