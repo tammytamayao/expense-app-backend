@@ -1,11 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
+  name: MyString
   description: MyString
   amount: 9.99
+  date: 2024-11-03
+  user_id: 1
 
 two:
-  title: MyString
-  description: MyString
-  amount: 9.99
+  name: AnotherString
+  description: AnotherDescription
+  amount: 19.99
+  date: 2024-11-03
+  user_id: 2
