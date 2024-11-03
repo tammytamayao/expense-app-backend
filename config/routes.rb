@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   namespace :api do
+    resources :users, only: [ :create ]
+    post "login", to: "users#login"
+    delete "logout", to: "users#logout"
     resources :expenses
   end
 end
