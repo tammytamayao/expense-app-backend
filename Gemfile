@@ -49,5 +49,5 @@ group :development, :test do
   gem "webdrivers" # This gem helps to automatically install the correct drivers for your browser
 
   gem "rack-cors", require: "rack/cors"
-  gem 'bcrypt', '~> 3.1.7'
+  gem "bcrypt", "~> 3.1.7"
 end

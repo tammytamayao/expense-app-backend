@@ -1,6 +1,6 @@
 class Api::ExpensesController < ApplicationController
   before_action :set_user
-  before_action :set_expense, only: [:show, :update, :destroy]
+  before_action :set_expense, only: [ :show, :update, :destroy ]
 
   # GET /api/expenses
   def index
@@ -51,10 +51,10 @@ class Api::ExpensesController < ApplicationController
   private
 
   def set_user
-    username = request.headers['Username']
+    username = request.headers["Username"]
     @user = User.find_by(username: username)
 
-    render json: { error: 'User not found' }, status: :unauthorized unless @user
+    render json: { error: "User not found" }, status: :unauthorized unless @user
   end
 
   def set_expense
