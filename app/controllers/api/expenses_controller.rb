@@ -1,25 +1,26 @@
 class Api::ExpensesController < ApplicationController
-  before_action :set_expense, only: [ :show, :update, :destroy ]
+  before_action :authenticate_user!
+  before_action :set_expense, only: [:show, :update, :destroy]
 
   # GET /api/expenses
   def index
     per_page = 10
     page = params[:page].to_i > 0 ? params[:page].to_i : 1
-    @expenses = Expense.limit(per_page).offset((page - 1) * per_page)
-    total_amount = Expense.sum(:amount)
+    @expenses = current_user.expenses.limit(per_page).offset((page - 1) * per_page)
+    total_amount = current_user.expenses.sum(:amount)
 
     render json: {
       expenses: @expenses,
       total_amount: total_amount,
       current_page: page,
       per_page: per_page,
-      total_pages: (Expense.count / per_page.to_f).ceil
+      total_pages: (current_user.expenses.count / per_page.to_f).ceil
     }
   end
 
   # POST /api/expenses
   def create
-    @expense = Expense.new(expense_params)
+    @expense = current_user.expenses.new(expense_params)
     if @expense.save
       render json: @expense, status: :created
     else
@@ -49,8 +50,11 @@ class Api::ExpensesController < ApplicationController
 
   private
 
+  # Make sure we’re only fetching the current user’s expense
   def set_expense
-    @expense = Expense.find(params[:id])
+    @expense = current_user.expenses.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Expense not found' }, status: :not_found
   end
 
   def expense_params

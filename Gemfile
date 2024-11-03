@@ -49,4 +49,6 @@ group :development, :test do
   gem "webdrivers" # This gem helps to automatically install the correct drivers for your browser
 
   gem "rack-cors", require: "rack/cors"
+
+  gem "devise"
 end
