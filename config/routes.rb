@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   namespace :api do
     resources :users, only: [ :create ]
     post "login", to: "users#login", as: :login
-    delete "logout", to: "users#logout", as: :logout    
+    delete "logout", to: "users#logout", as: :logout
     resources :expenses
   end
 end

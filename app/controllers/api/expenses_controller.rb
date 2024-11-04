@@ -13,7 +13,7 @@ class Api::ExpensesController < ApplicationController
   def create
     @expense = @user.expenses.new(expense_params)
     if @expense.save
-      return render json: @expense, status: :created
+      render json: @expense, status: :created
     else
       render_error(@expense)
     end
@@ -27,7 +27,7 @@ class Api::ExpensesController < ApplicationController
   # PATCH/PUT /api/expenses/:id
   def update
     if @expense.update(expense_params)
-      return render json: @expense
+      render json: @expense
     else
       render_error(@expense)
     end
