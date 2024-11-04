@@ -1,21 +1,22 @@
 class Api::ExpensesController < ApplicationController
-  before_action :set_user
-  before_action :set_expense, only: [ :show, :update, :destroy ]
+  before_action :set_current_user
+  before_action :set_expense, only: %i[ show update destroy ]
 
   # GET /api/expenses
   def index
     @expenses = fetch_expenses
     total_amount = calculate_total_amount
-
     render json: response_payload(@expenses, total_amount)
   end
 
   # POST /api/expenses
   def create
     @expense = @user.expenses.new(expense_params)
-    return render json: @expense, status: :created if @expense.save
-
-    render_error(@expense)
+    if @expense.save
+      render json: @expense, status: :created
+    else
+      render_error(@expense)
+    end
   end
 
   # GET /api/expenses/:id
@@ -25,9 +26,11 @@ class Api::ExpensesController < ApplicationController
 
   # PATCH/PUT /api/expenses/:id
   def update
-    return render json: @expense if @expense.update(expense_params)
-
-    render_error(@expense)
+    if @expense.update(expense_params)
+      render json: @expense
+    else
+      render_error(@expense)
+    end
   end
 
   # DELETE /api/expenses/:id
@@ -38,7 +41,7 @@ class Api::ExpensesController < ApplicationController
 
   private
 
-  def set_user
+  def set_current_user
     @user = User.find_by(username: request.headers["Username"])
     render json: { error: "User not found" }, status: :unauthorized unless @user
   end
