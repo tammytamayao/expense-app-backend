@@ -1,6 +1,6 @@
 class Api::ExpensesController < ApplicationController
   before_action :set_user
-  before_action :set_expense, only: [:show, :update, :destroy]
+  before_action :set_expense, only: [ :show, :update, :destroy ]
 
   # GET /api/expenses
   def index
