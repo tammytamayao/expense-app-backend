@@ -4,28 +4,18 @@ class Api::ExpensesController < ApplicationController
 
   # GET /api/expenses
   def index
-    per_page = 10
-    page = params[:page].to_i > 0 ? params[:page].to_i : 1
-    @expenses = @user.expenses.limit(per_page).offset((page - 1) * per_page)
-    total_amount = @user.expenses.sum(:amount)
+    @expenses = fetch_expenses
+    total_amount = calculate_total_amount
 
-    render json: {
-      expenses: @expenses,
-      total_amount: total_amount,
-      current_page: page,
-      per_page: per_page,
-      total_pages: (@user.expenses.count / per_page.to_f).ceil
-    }
+    render json: response_payload(@expenses, total_amount)
   end
 
   # POST /api/expenses
   def create
     @expense = @user.expenses.new(expense_params)
-    if @expense.save
-      render json: @expense, status: :created
-    else
-      render json: { errors: @expense.errors.full_messages }, status: :unprocessable_entity
-    end
+    return render json: @expense, status: :created if @expense.save
+
+    render_error(@expense)
   end
 
   # GET /api/expenses/:id
@@ -35,11 +25,9 @@ class Api::ExpensesController < ApplicationController
 
   # PATCH/PUT /api/expenses/:id
   def update
-    if @expense.update(expense_params)
-      render json: @expense
-    else
-      render json: { errors: @expense.errors.full_messages }, status: :unprocessable_entity
-    end
+    return render json: @expense if @expense.update(expense_params)
+
+    render_error(@expense)
   end
 
   # DELETE /api/expenses/:id
@@ -51,9 +39,7 @@ class Api::ExpensesController < ApplicationController
   private
 
   def set_user
-    username = request.headers["Username"]
-    @user = User.find_by(username: username)
-
+    @user = User.find_by(username: request.headers["Username"])
     render json: { error: "User not found" }, status: :unauthorized unless @user
   end
 
@@ -63,5 +49,29 @@ class Api::ExpensesController < ApplicationController
 
   def expense_params
     params.require(:expense).permit(:title, :description, :amount, :date)
+  end
+
+  def fetch_expenses
+    per_page = 10
+    page = params[:page].to_i.positive? ? params[:page].to_i : 1
+    @user.expenses.order(date: :asc).limit(per_page).offset((page - 1) * per_page)
+  end
+
+  def calculate_total_amount
+    @user.expenses.sum(:amount)
+  end
+
+  def response_payload(expenses, total_amount)
+    {
+      expenses: expenses,
+      total_amount: total_amount,
+      current_page: params[:page].to_i.positive? ? params[:page].to_i : 1,
+      per_page: 10,
+      total_pages: (@user.expenses.count / 10.0).ceil
+    }
+  end
+
+  def render_error(expense)
+    render json: { errors: expense.errors.full_messages }, status: :unprocessable_entity
   end
 end
