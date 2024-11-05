@@ -24,11 +24,11 @@
 
 ## Introductory Notes
 
-This README provides a comprehensive guide to setting up and running the BRIGHT MONEY APP, including installation instructions, configurations, and testing procedures.
+This README provides a comprehensive guide to setting up and running the BRIGHT MONEY APP backend API application, including installation instructions, configurations, and testing procedures.
 
 ## Prerequisites
 
-1. **IDE**: Install IDE such as VS Code in your local machine
+1. **Visual Studio Code (VSCode)**: Download from [code.visualstudio.com](https://code.visualstudio.com/) if you haven’t already.
 2. **Package Managers**: Homebrew (for Mac) or Chocolatey (for Windows) is recommended to help install dependencies.
 3. **Terminal Access**: Command Prompt, Git Bash, or Terminal in VS Code
 
@@ -118,7 +118,7 @@ Check out the [Rails deployment documentation](https://guides.rubyonrails.org/tu
 - Ensure you have PostgreSQL running before creating the database.
 - Confirm that the application is running on http://127.0.0.1:3000 or http://localhost:3000
 - If you encounter issues, refer to the logs or check for any missing dependencies.
-- Feel free to reach out for support or contribute to the project. Thank you
+- Feel free to reach out for support at **tammytamayao@gmail.com**
 
 ### Sample Database Connection Info
 
@@ -138,3 +138,5 @@ development:
 Make sure to replace your_username and your_password with your actual PostgreSQL credentials. This information is necessary to establish a connection to the PostgreSQL database.
 
 You may also opt to use Table Plus and use the above sample information to establish a connection.
+
+Thank you.
