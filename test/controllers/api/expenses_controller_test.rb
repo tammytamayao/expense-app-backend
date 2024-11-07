@@ -61,7 +61,7 @@ class Api::ExpensesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create expense" do
     expense_params = { expense: { title: "New Expense", description: "New description", amount: 25.0, date: Date.today } }
-    assert_difference('@user.expenses.count', 1) do
+    assert_difference("@user.expenses.count", 1) do
       post api_expenses_url, params: expense_params, headers: @valid_headers
     end
     assert_response :created
@@ -81,7 +81,7 @@ class Api::ExpensesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy expense" do
-    assert_difference('@user.expenses.count', -1) do
+    assert_difference("@user.expenses.count", -1) do
       delete api_expense_url(@expense), headers: @valid_headers
     end
     assert_response :no_content
