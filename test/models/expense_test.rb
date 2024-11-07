@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ExpenseTest < ActiveSupport::TestCase
   test "should not save expense without title" do
