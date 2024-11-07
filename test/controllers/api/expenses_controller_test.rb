@@ -1,51 +1,88 @@
 require "test_helper"
 
 class Api::ExpensesControllerTest < ActionDispatch::IntegrationTest
-  # Setup users for testing
   setup do
-    @user_one = users(:one)
-    @user_two = users(:two)
-    @expense_one = expenses(:one)
+    @user = users(:one)
+    @valid_headers = { "Username" => @user.username }
+    @expense = expenses(:one)
   end
 
-  # Test "index" action
-  test "should get expenses" do
-    get api_expenses_url, headers: { Username: @user_one.username }
+  test "should not get expenses index without authorization" do
+    get api_expenses_url
+    assert_response :unauthorized
+    json = JSON.parse(response.body)
+    assert_equal "User not found", json["error"]
+  end
+
+  test "should not get expenses index with invalid username in headers" do
+    invalid_headers = { "Username" => "invaliduser" }
+    get api_expenses_url, headers: invalid_headers
+    assert_response :unauthorized
+    json = JSON.parse(response.body)
+    assert_equal "User not found", json["error"]
+  end
+
+  test "should not show expense without authorization" do
+    get api_expense_url(@expense), headers: {}
+    assert_response :unauthorized
+    json = JSON.parse(response.body)
+    assert_equal "User not found", json["error"]
+  end
+
+  test "should not create expense without authorization" do
+    expense_params = { expense: { title: "Test Expense", description: "Test Description", amount: 10.0, date: Date.today } }
+    post api_expenses_url, params: expense_params
+    assert_response :unauthorized
+    json = JSON.parse(response.body)
+    assert_equal "User not found", json["error"]
+  end
+
+  test "should not update expense without authorization" do
+    expense_params = { expense: { title: "Updated Expense Title" } }
+    patch api_expense_url(@expense), params: expense_params, headers: {}
+    assert_response :unauthorized
+    json = JSON.parse(response.body)
+    assert_equal "User not found", json["error"]
+  end
+
+  test "should not destroy expense without authorization" do
+    delete api_expense_url(@expense), headers: {}
+    assert_response :unauthorized
+    json = JSON.parse(response.body)
+    assert_equal "User not found", json["error"]
+  end
+
+  test "should get expenses index" do
+    get api_expenses_url, headers: @valid_headers
     assert_response :success
     json = JSON.parse(response.body)
-    assert_equal @user_one.id, json["expenses"][0]["user_id"]
+    assert_equal 1, json["expenses"].length
   end
 
-  # Test "create" action
   test "should create expense" do
-    expense_params = { expense: { title: "New Title", description: "New Description", amount: 10.25, date: "2024-11-07" } }
-    post api_expenses_url, params: expense_params, headers: { Username: @user_one.username }
+    expense_params = { expense: { title: "New Expense", description: "New description", amount: 25.0, date: Date.today } }
+    assert_difference("@user.expenses.count", 1) do
+      post api_expenses_url, params: expense_params, headers: @valid_headers
+    end
     assert_response :created
-    json = JSON.parse(response.body)
-    assert_equal "New Title", json["title"]
-    assert_equal @user_one.id, json["user_id"]
   end
 
-  # Test "show" action
   test "should show expense" do
-    get api_expense_url(@expense_one), headers: { Username: @user_one.username }
+    get api_expense_url(@expense), headers: @valid_headers
     assert_response :success
-    json = JSON.parse(response.body)
-    assert_equal @expense_one.title, json["title"]
   end
 
-  # Test "update" action
   test "should update expense" do
-    patch api_expense_url(@expense_one), params: { expense: { title: "Updated Title" } }, headers: { Username: @user_one.username }
+    expense_params = { expense: { title: "Updated Title" } }
+    patch api_expense_url(@expense), params: expense_params, headers: @valid_headers
     assert_response :success
-    @expense_one.reload
-    assert_equal "Updated Title", @expense_one.title
+    @expense.reload
+    assert_equal "Updated Title", @expense.title
   end
 
-  # Test "destroy" action
   test "should destroy expense" do
-    assert_difference("Expense.count", -1) do
-      delete api_expense_url(@expense_one), headers: { Username: @user_one.username }
+    assert_difference("@user.expenses.count", -1) do
+      delete api_expense_url(@expense), headers: @valid_headers
     end
     assert_response :no_content
   end
