@@ -2,10 +2,10 @@
 
 one:
   id: 1
-  username: MyString
-  password_digest: MyString
+  username: user
+  password_digest: $2a$12$QV1NJN3RIHSUm2CkjOj/heviCXQcxpoW6v1w5JVgxhrezgVmTXzoW #bcrypt hashed for password
 
 two:
   id: 2
-  username: MyString
-  password_digest: MyString
+  username: anotheruser
+  password_digest: $2a$12$jHNrzY7Z1ZhK5iBVWr0ScOHv5ZcQHqTkl9fZ.gxteWqp5E7TH9EH2 #bcrypt hashed for anotherpassword
