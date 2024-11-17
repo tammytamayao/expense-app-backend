@@ -57,7 +57,7 @@ class Api::ExpensesController < ApplicationController
   def fetch_expenses
     per_page = 10
     page = params[:page].to_i.positive? ? params[:page].to_i : 1
-    @user.expenses.order(date: :asc).limit(per_page).offset((page - 1) * per_page)
+    @user.expenses.order(date: :desc).limit(per_page).offset((page - 1) * per_page)
   end
 
   def calculate_total_amount
